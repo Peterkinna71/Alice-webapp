@@ -19,7 +19,7 @@ jiter==0.8.0
 Kivy==2.3.0
 MarkupSafe==3.0.2
 openai==1.57.0
-PyAudio==0.2.14
+PyAudio==0.2.13
 pydantic==2.10.3
 pydantic_core==2.27.1
 Pygments==2.18.0
