@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alice - Din AI-assistent</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        #conversation {
+            width: 80%;
+            height: 400px;
+            margin: 20px auto;
+            padding: 10px;
+            overflow-y: scroll;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 20px;
+            background-color: #0078D7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005BBB;
+        }
+    </style>
+</head>
+<body>
+    <h1>Prata med Alice</h1>
+    <div id="conversation"></div>
+    <button onclick="askAlice()">Prata</button>
+    <audio id="audioPlayer" controls style="display: none;"></audio>
+
+    <script>
+        async function askAlice() {
+            const question = prompt("Vad vill du fråga Alice?");
+            if (!question) return;
+
+            const conversation = document.getElementById("conversation");
+            conversation.innerHTML += `<p><strong>Du:</strong> ${question}</p>`;
+
+            const response = await fetch("/ask_alice", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ question })
+            });
+
+            const data = await response.json();
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            conversation.innerHTML += `<p><strong>Alice:</strong> ${data.response}</p>`;
+
+            // Spela upp ljud
+            const audioPlayer = document.getElementById("audioPlayer");
+            audioPlayer.src = `/audio/${data.audio_file}`;
+            audioPlayer.style.display = "block";
+            audioPlayer.play();
+        }
+    </script>
+</body>
+</html>
